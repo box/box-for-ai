@@ -18,27 +18,27 @@ Skills are automatically available once installed. The agent will use them when 
 
  
 
-|    **Implement Box content workflows**    | 
-| ------------------------------------------| 
-| Add Box file upload to my app             | 
-| Create a shared link for this folder      | 
-| Set up Box webhooks for new file events   | 
+### Implement Box content workflows
 
- — Search, metadata, Box AI retrieval, and event-driven automations.
+`Add Box file upload to my app`
 
-|    **Build document-driven flows**        | 
-| ------------------------------------------| 
-| Search my Box account for invoices        | 
-| Use Box AI to classify documents          | 
-| Wire webhooks to process new uploads      | 
+`Create a shared link for this folder`
 
+`Set up Box webhooks for new file events`
 
- — Auth issues, 401/403/404, rate limits, and wrong-actor bugs.
+### Build document-driven flows
 
-|    **Troubleshoot integrations**          | 
-| ------------------------------------------| 
-| Debug 401 errors with my Box JWT auth     | 
-| Fix webhook signature verification        | 
+`Search my Box account for invoices`
+
+`Use Box AI to classify documents`
+
+`Wire webhooks to process new uploads`
+
+### Troubleshoot integrations
+
+`Debug 401 errors with my Box JWT auth`
+
+`Fix webhook signature verification`
 
 ## Skill Structure
 

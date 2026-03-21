@@ -1,0 +1,13 @@
+{
+    "name": "box-plugin-marketplace",
+    "owner": {
+      "name": "Box"
+    },
+    "plugins": [
+      {
+        "name": "box",
+        "source": "./",
+        "description": "Box Plugin for Claude Code to help with Box Platform integrations including content workflows, shared links, webhooks, metadata, and Box AI retrieval."
+      }
+    ]
+  }

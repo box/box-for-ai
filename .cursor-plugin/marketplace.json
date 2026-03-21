@@ -1,0 +1,13 @@
+{
+  "name": "box-plugin-marketplace",
+  "owner": {
+    "name": "Box"
+  },
+  "plugins": [
+    {
+      "name": "box",
+      "source": "./",
+      "description": "Tools for building and troubleshooting Box Platform integrations. Includes content workflows, shared links, collaborations, webhooks, metadata, and Box AI retrieval."
+    }
+  ]
+}

@@ -3,7 +3,7 @@ name: box
 description: Build and troubleshoot Box integrations for uploads, folders, folder listings, downloads and previews, shared links, collaborations, search, metadata, event-driven automations, and Box AI retrieval flows. Use when the agent needs to add Box APIs or SDKs to an app, wire Box-backed document workflows, organize or share content, react to new files, or fetch Box content for search, summarization, extraction, or question-answering.
 ---
 
-# Box Content API
+# Box
 
 ## Overview
 
@@ -100,4 +100,4 @@ The final answer should include:
 - `references/webhooks-and-events.md`: webhook setup, event-feed usage, idempotency, and verification
 - `references/ai-and-retrieval.md`: search-first retrieval, Box AI usage, and external AI guardrails
 - `references/troubleshooting.md`: common failure modes and a debugging checklist
-- `examples/box-content-api-prompts.md`: example prompts for realistic use cases
+- `examples/box-prompts.md`: example prompts for realistic use cases

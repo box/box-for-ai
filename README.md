@@ -1,65 +1,53 @@
-# Box for AI
+# Box Agent Skills
 
-Your AI coding assistant already knows how to write code. This plugin teaches it Box — how to integrate the Box Platform, wire content workflows, and get the most out of every feature.
+Agent Skills to help developers using AI agents work with Box. Whether you're adding Box to a new project, building shared link flows, configuring webhooks or using Box AI retrieval, this plugin gives your assistant the context it needs to do it right.
 
-Whether you're adding Box to a new project, building shared link flows, or configuring webhooks and Box AI retrieval, just ask. The plugin gives your assistant the context it needs to do it right.
-
-Supports **Claude Code** and **Cursor**.
-
-## What You Can Do
-
-**Implement Box content workflows** — Uploads, folders, folder listings, downloads and previews, shared links, collaborations, metadata, and file moves.
-
-```
-Add Box file upload to my app
-Create a shared link for this folder
-Set up Box webhooks for new file events
-```
-
-**Build document-driven flows** — Search, metadata, Box AI retrieval, and event-driven automations.
-
-```
-Search my Box account for invoices
-Use Box AI to classify documents
-Wire webhooks to process new uploads
-```
-
-**Troubleshoot integrations** — Auth issues, 401/403/404, rate limits, and wrong-actor bugs.
-
-```
-Debug 401 errors with my Box JWT auth
-Fix webhook signature verification
-```
+The skills in this repo follow the [Agent Skills](https://agentskills.io/) format.
 
 ## Installation
 
-### Claude Code
-
 ```bash
-/install-plugin box
+npx skills add box/box-for-ai
 ```
 
-Or from source:
+Check out the latest and full list of skills [here](https://skills.sh/box/box-for-ai).
 
-```bash
-/install-plugin file:///path/to/box-for-ai
-```
+## Usage
 
-Restart Claude Code to activate.
+Skills are automatically available once installed. The agent will use them when relevant tasks are detected. Here are some example prompts for different use cases:
 
-### Cursor
+ 
 
-Search for **Box** in Cursor Settings > Extensions and install.
+|    **Implement Box content workflows**    | 
+| ------------------------------------------| 
+| Add Box file upload to my app             | 
+| Create a shared link for this folder      | 
+| Set up Box webhooks for new file events   | 
 
-Or install from path: add the plugin path in Cursor Settings > Extensions > Install from path.
+ — Search, metadata, Box AI retrieval, and event-driven automations.
 
-## Skills
+|    **Build document-driven flows**        | 
+| ------------------------------------------| 
+| Search my Box account for invoices        | 
+| Use Box AI to classify documents          | 
+| Wire webhooks to process new uploads      | 
 
-### Content API
 
-| Skill | Description |
-|-------|-------------|
-| `box-content-api` | Build and troubleshoot Box integrations for uploads, folders, downloads, shared links, collaborations, search, metadata, webhooks, and Box AI retrieval |
+ — Auth issues, 401/403/404, rate limits, and wrong-actor bugs.
+
+|    **Troubleshoot integrations**          | 
+| ------------------------------------------| 
+| Debug 401 errors with my Box JWT auth     | 
+| Fix webhook signature verification        | 
+
+## Skill Structure
+
+The Box skill follows the [Agent Skills Open Standard](https://agentskills.io/):
+
+- `SKILL.md` - Required skill manifest with frontmatter (name, description, metadata)
+- `references/` - Individual reference files
+- `scripts/` - Testing a REST API helper scripts
+- `examples/` - Example prompts
 
 ## Prerequisites
 

@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- MCP server auth
 - Actor selection checklist
 - CLI-first local testing
 - Choosing the auth path
@@ -9,6 +10,23 @@
 - Inspecting an existing codebase
 - Common secrets and config
 - Official Box starting points
+
+## MCP server auth
+
+When this skill is installed as a platform plugin (e.g., Cursor, Claude Code), the Box MCP server is configured via `mcp.json` at the repo root. Auth requires:
+
+- A Box OAuth 2.0 app created in the [Box Developer Console](https://app.box.com/developers/console) with [OAuth 2.0 authentication](https://developer.box.com/guides/authentication/oauth2/oauth2-setup/)
+- `BOX_CLIENT_ID` and `BOX_CLIENT_SECRET` set as environment variables, or configured directly in the platform's MCP config file (e.g., `~/.cursor/mcp.json`)
+- The platform's OAuth redirect URI registered in the Box app (e.g., `cursor://anysphere.cursor-mcp/oauth/callback` for Cursor)
+
+If MCP tools are not available in the session, walk the user through these steps:
+
+1. Verify env vars are set: `echo $BOX_CLIENT_ID` (should not be empty)
+2. Verify the OAuth app has the correct redirect URI for their platform
+3. Verify the platform has third-party plugins enabled
+4. Restart the editor — MCP connections are established at startup
+
+If the user cannot resolve MCP auth immediately, fall back to Box CLI for the current session. See the CLI-first local testing section below.
 
 ## Actor selection checklist
 

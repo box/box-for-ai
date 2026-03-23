@@ -9,6 +9,7 @@
 - 429
 - Webhook verification failures
 - Search quality problems
+- MCP server not connected
 - CLI auth problems
 - Codex sandbox network access
 
@@ -67,6 +68,21 @@ When using Box CLI, run `box <command> --help` before the first invocation of an
 - Querying as the wrong actor
 - Expecting search to return content the current identity cannot see
 - Downloading too early instead of returning IDs and metadata first
+
+## MCP server not connected
+
+Box MCP tools are not appearing in the session, or MCP calls fail with auth errors.
+
+- `BOX_CLIENT_ID` or `BOX_CLIENT_SECRET` is not set or is incorrect — have the user check with `echo $BOX_CLIENT_ID`
+- The Box OAuth 2.0 app is missing the platform's redirect URI (e.g., `cursor://anysphere.cursor-mcp/oauth/callback` for Cursor)
+- The platform's MCP config file has hardcoded credentials that are stale or malformed — check `~/.cursor/mcp.json` if using Cursor
+- Third-party plugins are not enabled in the platform settings
+- The editor was not restarted after making auth changes — MCP connections are established at startup
+- The Box admin has not enabled the MCP server integration in the [Admin Console](https://developer.box.com/guides/authorization/)
+
+**Quick diagnostic:** If other MCP servers work but Box does not, the issue is Box-specific auth. If no MCP servers work, the issue is platform configuration.
+
+**Workaround:** Fall back to Box CLI while the user resolves MCP auth. See `references/box-cli.md` for CLI auth setup.
 
 ## CLI auth problems
 

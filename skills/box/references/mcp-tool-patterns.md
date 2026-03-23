@@ -4,6 +4,24 @@ Best-practice patterns for working with Box content via the Box MCP server. The 
 
 > **Mandatory guardrails live in `rules/box.mdc` (at the repo root).** That file covers confirmation gates for destructive actions, hub modifications, file comments, Doc Gen output locations, externally shared folders, content display preferences, and Box AI governance. Read and follow them in every session.
 
+## MCP auth and setup
+
+The Box MCP server authenticates via OAuth 2.0. The plugin's `mcp.json` reads credentials from two environment variables:
+
+- `BOX_CLIENT_ID` — from the Box OAuth 2.0 app's Configuration tab
+- `BOX_CLIENT_SECRET` — from the same tab
+
+The Box OAuth app must also have the platform's redirect URI registered (e.g., `cursor://anysphere.cursor-mcp/oauth/callback` for Cursor). See the platform-specific setup guide for the exact URI and step-by-step instructions.
+
+If MCP tools are not appearing in the session:
+
+1. Check that `BOX_CLIENT_ID` and `BOX_CLIENT_SECRET` are set in the shell environment or configured directly in the platform's MCP config file (e.g., `~/.cursor/mcp.json`).
+2. Confirm the OAuth app has the correct redirect URI for the platform.
+3. Confirm the platform has third-party plugins enabled (e.g., in Cursor: Settings > Features > "Include third-party Plugins, Skills, and other configs").
+4. Restart the editor after making changes — MCP server connections are established at startup.
+
+If MCP auth still fails after setup, fall back to the Box CLI while the user resolves the connection. See `references/box-cli.md` for CLI auth and common commands.
+
 ## When to use MCP vs CLI
 
 The Box MCP server provides tools optimized for agent workflows — content management, search, AI, hubs, collaboration, and document generation — with structured inputs and outputs, plugin-managed auth, and support for concurrent calls. Prefer MCP tools when they cover the operation.

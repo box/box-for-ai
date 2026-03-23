@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "box": {
+      "url": "https://mcp.box.com",
+      "auth": {
+        "CLIENT_ID": "${BOX_CLIENT_ID}",
+        "CLIENT_SECRET": "${BOX_CLIENT_SECRET}"
+      }
+    }
+  }
+}

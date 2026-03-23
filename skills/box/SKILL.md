@@ -1,6 +1,6 @@
 ---
 name: box
-description: Build and troubleshoot Box integrations for uploads, folders, folder listings, downloads and previews, shared links, collaborations, search, metadata, event-driven automations, and Box AI retrieval flows. Use when the agent needs to add Box APIs or SDKs to an app, wire Box-backed document workflows, organize or share content, react to new files, or fetch Box content for search, summarization, extraction, or question-answering.
+description: Build and troubleshoot Box integrations for uploads, folders, folder listings, downloads and previews, shared links, collaborations, search, metadata, event-driven automations, and Box AI retrieval flows. Also covers working with Box content via the Box MCP server — search, read, upload, organize files, run Box AI queries, and extract structured metadata. Use when the agent needs to add Box APIs or SDKs to an app, wire Box-backed document workflows, organize or share content, react to new files, fetch Box content for search, summarization, extraction, or question-answering, or operate on Box content through MCP tools.
 ---
 
 # Box
@@ -13,7 +13,8 @@ Implement Box content workflows in application code. Reuse the repository's exis
 
 | If the user needs... | Primary object | Read first | Pair with | Minimal verification |
 | --- | --- | --- | --- | --- |
-| Local verification, manual smoke tests, or quick inspection from the agent without app code changes | Current CLI environment | `references/box-cli.md` | `references/auth-and-setup.md` | `scripts/box_cli_smoke.py check-auth` then a read command |
+| Working with Box content via MCP tools (search, read, upload, AI queries, metadata extraction) | MCP tool call | `references/mcp-tool-patterns.md` | `references/ai-and-retrieval.md` | `who_am_i` call to verify auth |
+| Box operations not covered by MCP tools, local verification, smoke tests, or debugging | CLI command | `references/box-cli.md` | `references/auth-and-setup.md` | `scripts/box_cli_smoke.py check-auth` then a read command |
 | Uploads, folders, listings, downloads, shared links, collaborations, or metadata | File or folder | `references/content-workflows.md` | `references/auth-and-setup.md` | Read-after-write call using the same actor |
 | Organizing, reorganizing, or batch-moving files across folders; bulk metadata tagging; migrating folder structures | File set or folder tree | `references/bulk-operations.md` | `references/auth-and-setup.md`, `references/content-workflows.md`, `references/ai-and-retrieval.md` | Inventory source, verify move count matches plan |
 | Event-driven ingestion, new-file triggers, or webhook debugging | Webhook or events feed | `references/webhooks-and-events.md` | `references/auth-and-setup.md`, `references/troubleshooting.md` | Signature check plus duplicate-delivery test |
@@ -30,6 +31,7 @@ Follow these steps in order when coding against Box.
 3. Identify the primary Box object and choose the matching reference from the routing table above.
 4. Confirm whether the task changes access or data exposure. Shared links, collaborations, auth changes, large-scale downloads, and broad AI retrieval all need explicit user confirmation before widening access or scope.
 5. Read only the matching reference files:
+   - Box MCP tool usage patterns: `references/mcp-tool-patterns.md`
    - Auth setup, actor selection, SDK vs REST: `references/auth-and-setup.md`
    - Box CLI local verification: `references/box-cli.md`
    - Workflow router: `references/workflows.md`
@@ -92,6 +94,7 @@ The final answer should include:
 
 ## References
 
+- `references/mcp-tool-patterns.md`: best-practice patterns for working with Box content via the Box MCP server — search, file writes, metadata extraction, Box AI tool selection, and general guidelines
 - `references/auth-and-setup.md`: auth path selection, SDK vs REST choice, existing-codebase inspection, and current Box doc anchors
 - `references/box-cli.md`: CLI-first local auth, smoke-test commands, and safe verification patterns
 - `references/workflows.md`: quick workflow router when the task is ambiguous

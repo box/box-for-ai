@@ -1,11 +1,14 @@
 {
   "name": "box",
-  "description": "Box Plugin for Cursor to help with Box Platform integrations including content workflows, shared links, webhooks, metadata, and Box AI retrieval.",
+  "displayName": "Box",
+  "description": "Box Plugin for Cursor — search, read, and manage content in Box, build Box Platform integrations, and leverage Box AI for Q&A, summarization, and extraction via the Box MCP server.",
   "version": "1.0.0",
   "author": {
     "name": "Box"
   },
-  "keywords": ["box", "content", "cloud-storage", "file-management", "collaboration"],
+  "repository": "https://github.com/box/box-for-ai",
+  "homepage": "https://developer.box.com/guides/box-mcp",
   "license": "MIT",
-  "repository": "https://github.com/box/box-for-ai"
+  "keywords": ["box", "ai", "box-ai", "content", "cloud-storage", "mcp", "file-management", "collaboration"],
+  "logo": "assets/logo.svg"
 }

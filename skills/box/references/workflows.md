@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- Box MCP tool usage
 - Box CLI local verification
 - Content workflows
 - Webhooks and events
@@ -9,6 +10,15 @@
 - Troubleshooting
 
 Use this file when the task is ambiguous and you need to decide which targeted reference to open next.
+
+## Box MCP tool usage
+
+Open `references/mcp-tool-patterns.md` for:
+
+- Working with Box content via MCP tools (search, read, upload, organize)
+- Box AI queries via MCP (Q&A, summarization, extraction)
+- Metadata extraction and structured extraction via MCP
+- General MCP tool usage patterns and guidelines
 
 ## Box CLI local verification
 

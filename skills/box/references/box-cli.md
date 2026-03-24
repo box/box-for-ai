@@ -9,13 +9,16 @@
 - Actor controls
 - Guardrails
 
-## When to use CLI-first mode
+## When to use the CLI
 
-Use Box CLI first when:
+The Box CLI provides access to the full Box API. Use it for:
 
-- Codex needs a quick local smoke test without changing application code
-- The operator already has a working Box CLI environment
-- You want to verify behavior as the current CLI actor or with `--as-user`
+- **Operations outside the MCP server's current scope** — if a Box MCP tool isn't available for the task, the CLI can likely handle it.
+- **Local verification and smoke tests** — quick inspection without changing application code.
+- **Actor testing** — verify behavior as the current CLI actor or impersonate with `--as-user`.
+- **Debugging** — reproduce failures with exact actor, object ID, and endpoint.
+
+When Box MCP tools cover the operation, prefer MCP — it provides structured I/O designed for agent interaction and supports concurrent calls. The CLI should be run strictly one command at a time (concurrent CLI invocations cause auth conflicts).
 
 Use `scripts/box_rest.py` instead when:
 
@@ -43,12 +46,16 @@ Do not use `box configure:environments:get --current` as a routine check because
 
 ## Authentication paths
 
+These commands are interactive — they open a browser or prompt for input. Tell the user to run them in their own terminal rather than executing them as the agent.
+
 - Fastest OAuth flow with the official Box CLI app:
   - `box login -d`
 - OAuth with your own Box app:
   - `box login --platform-app`
 - Add an environment from an app config file:
   - `box configure:environments:add PATH`
+
+Never ask the user to paste credentials, tokens, or secrets into the conversation. If credentials are needed, guide the user to set them as environment variables or in the appropriate config file.
 
 After login or environment setup, re-run `box users:get me --json` to confirm the CLI can make authenticated calls.
 

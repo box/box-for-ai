@@ -7,7 +7,7 @@
     {
       "name": "box",
       "source": "./",
-      "description": "Tools for building and troubleshooting Box Platform integrations. Includes content workflows, shared links, collaborations, webhooks, metadata, and Box AI retrieval."
+      "description": "Search, read, and manage Box content via the Box MCP server, and build Box Platform integrations. Includes content workflows, shared links, collaborations, webhooks, metadata, Box AI, and MCP tool access."
     }
   ]
 }

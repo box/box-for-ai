@@ -1,10 +1,12 @@
 # Box Agent Skills
 
-Agent Skills to help developers using AI agents work with Box. Whether you're adding Box to a new project, building shared link flows, configuring webhooks or using Box AI retrieval, this plugin gives your assistant the context it needs to do it right.
+Agent Skills to help developers using AI agents work with Box. Whether you're building Box integrations in code, working with Box content via MCP tools, configuring webhooks, or using Box AI retrieval — this plugin gives your assistant the context it needs to do it right.
 
-The skills in this repo follow the [Agent Skills](https://agentskills.io/) format.
+The skills in this repo follow the [Agent Skills](https://agentskills.io/) format and can also be installed as a plugin for [Cursor](https://cursor.com) or [Claude Code](https://code.claude.com).
 
 ## Installation
+
+### As an Agent Skill
 
 ```bash
 npx skills add box/box-for-ai
@@ -12,11 +14,18 @@ npx skills add box/box-for-ai
 
 Check out the latest and full list of skills [here](https://skills.sh/box/box-for-ai).
 
+### As a Platform Plugin
+
+This repo can also be installed as a plugin for supported platforms, which configures the Box MCP server automatically — giving the agent direct access to your files, folders, hubs, and Box AI tools.
+
+| Platform | Setup guide |
+|---|---|
+| Cursor | [`.cursor-plugin/README.md`](.cursor-plugin/README.md) |
+| Claude Code | [`.claude-plugin/README.md`](.claude-plugin/README.md) |
+
 ## Usage
 
-Skills are automatically available once installed. The agent will use them when relevant tasks are detected. Here are some example prompts for different use cases:
-
- 
+Skills are automatically available once installed. The agent will use them when relevant tasks are detected. Here are some example prompts:
 
 ### Implement Box content workflows
 
@@ -44,9 +53,9 @@ Skills are automatically available once installed. The agent will use them when 
 
 The Box skill follows the [Agent Skills Open Standard](https://agentskills.io/):
 
-- `SKILL.md` - Required skill manifest with frontmatter (name, description, metadata)
-- `references/` - Individual reference files
-- `scripts/` - Testing a REST API helper scripts
+- `SKILL.md` - Skill manifest with frontmatter, routing table, workflow steps, and guardrails
+- `references/` - Individual reference files (auth, content workflows, MCP tool patterns, AI/retrieval, etc.)
+- `scripts/` - Testing and REST API helper scripts
 - `examples/` - Example prompts
 
 ## Prerequisites

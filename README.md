@@ -25,19 +25,9 @@ This repo can also be installed as a plugin for supported platforms, which confi
 
 ## Usage
 
-Skills are automatically available once installed. The agent will use them when relevant tasks are detected. Here are some example prompts for different use cases:
+Skills are automatically available once installed. The agent will use them when relevant tasks are detected. Here are some example prompts:
 
-### Work with Box content (via MCP)
-
-`Find all Q4 reports in the Finance folder`
-
-`Summarize the key risks in this contract`
-
-`Extract invoice numbers and totals from these PDFs`
-
-`Upload this CSV to the Reports folder in Box`
-
-### Implement Box content workflows (in code)
+### Implement Box content workflows
 
 `Add Box file upload to my app`
 
@@ -85,25 +75,6 @@ python3 skills/box/scripts/box_cli_smoke.py list-folder-items 0 --max-items 5
 export BOX_ACCESS_TOKEN="your-token"
 python3 skills/box/scripts/box_rest.py get-item --item-type folder --item-id 0
 ```
-
-## Safety Guardrails
-
-The skill includes guardrails to keep the agent from doing anything surprising:
-
-- **Destructive actions** (overwrite, delete, bulk changes) prompt you for confirmation before proceeding.
-- **Hub creation and modifications** always ask before proceeding, since hubs can be visible across your organization.
-- **AI operations stay in Box** — the agent uses Box AI rather than downloading files and processing them externally.
-- **Content display** — the agent asks whether you prefer a link to Box or the content pasted directly.
-
-Platform plugins include additional runtime guardrails — see the platform-specific setup guides for details.
-
-## Links
-
-- [Box MCP Server docs](https://developer.box.com/guides/box-mcp/remote/)
-- [Box OAuth 2.0 setup](https://developer.box.com/guides/authentication/oauth2/oauth2-setup/)
-- [Box Developer Console](https://app.box.com/developers/console)
-- [Box Developer Community](https://community.box.com/box-platform-5)
-- [Agent Skills specification](https://agentskills.io)
 
 ## Contributing
 

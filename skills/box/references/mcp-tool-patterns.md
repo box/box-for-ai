@@ -15,10 +15,28 @@ The Box OAuth app must also have the platform's redirect URI registered (e.g., `
 
 If MCP tools are not appearing in the session:
 
-1. Check that credentials are set without printing them: `[ -n "$BOX_CLIENT_ID" ] && echo "set" || echo "not set"`. If not set, guide the user to add them to their shell profile or the platform's MCP config file (e.g., `~/.cursor/mcp.json`). Never ask the user to paste credentials into the conversation.
-2. Confirm the OAuth app has the correct redirect URI for the platform.
-3. Confirm the platform has third-party plugins enabled (e.g., in Cursor: Settings > Features > "Include third-party Plugins, Skills, and other configs").
-4. Restart the editor after making changes — MCP server connections are established at startup.
+1. Check that credentials are set without printing them: `[ -n "$BOX_CLIENT_ID" ] && echo "set" || echo "not set"`. If not set, guide the user to add them to their shell profile. Never ask the user to paste credentials into the conversation.
+2. Check whether the platform's MCP config file exists (e.g., `~/.cursor/mcp.json` for Cursor). If the user has already configured it, respect their setup. If it does not exist or does not include a `box` entry, offer to create or update it with the following template that references environment variables:
+
+```json
+{
+  "mcpServers": {
+    "box": {
+      "url": "https://mcp.box.com",
+      "auth": {
+        "CLIENT_ID": "${BOX_CLIENT_ID}",
+        "CLIENT_SECRET": "${BOX_CLIENT_SECRET}"
+      }
+    }
+  }
+}
+```
+
+If the file already contains other MCP servers, merge the `box` entry into the existing `mcpServers` object — do not overwrite the file. Never write actual credentials into the config file; use the `${...}` environment variable syntax so secrets stay in the user's shell profile.
+
+3. Confirm the OAuth app has the correct redirect URI for the platform.
+4. Confirm the platform has third-party plugins enabled (e.g., in Cursor: Settings > Features > "Include third-party Plugins, Skills, and other configs").
+5. Restart the editor after making changes — MCP server connections are established at startup.
 
 If MCP auth still fails after setup, fall back to the Box CLI while the user resolves the connection. See `references/box-cli.md` for CLI auth and common commands.
 

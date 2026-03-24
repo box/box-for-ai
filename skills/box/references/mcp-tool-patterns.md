@@ -32,7 +32,7 @@ If MCP tools are not appearing in the session:
 }
 ```
 
-If the file already contains other MCP servers, merge the `box` entry into the existing `mcpServers` object — do not overwrite the file. Never write actual credentials into the config file; use the `${...}` environment variable syntax so secrets stay in the user's shell profile.
+If the file already contains other MCP servers, merge the `box` entry into the existing `mcpServers` object — do not overwrite the file. The `${...}` syntax references environment variables so secrets stay in the user's shell profile. Alternatively, the user can set their client ID and secret directly in this config file — that is safe since `~/.cursor/mcp.json` is a local file and not version-controlled. Never write credentials into the conversation or into files inside a repository.
 
 3. Confirm the OAuth app has the correct redirect URI for the platform.
 4. Confirm the platform has third-party plugins enabled (e.g., in Cursor: Settings > Features > "Include third-party Plugins, Skills, and other configs").

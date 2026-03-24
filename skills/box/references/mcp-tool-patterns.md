@@ -15,7 +15,7 @@ The Box OAuth app must also have the platform's redirect URI registered (e.g., `
 
 If MCP tools are not appearing in the session:
 
-1. Check that `BOX_CLIENT_ID` and `BOX_CLIENT_SECRET` are set in the shell environment or configured directly in the platform's MCP config file (e.g., `~/.cursor/mcp.json`).
+1. Check that credentials are set without printing them: `[ -n "$BOX_CLIENT_ID" ] && echo "set" || echo "not set"`. If not set, guide the user to add them to their shell profile or the platform's MCP config file (e.g., `~/.cursor/mcp.json`). Never ask the user to paste credentials into the conversation.
 2. Confirm the OAuth app has the correct redirect URI for the platform.
 3. Confirm the platform has third-party plugins enabled (e.g., in Cursor: Settings > Features > "Include third-party Plugins, Skills, and other configs").
 4. Restart the editor after making changes — MCP server connections are established at startup.

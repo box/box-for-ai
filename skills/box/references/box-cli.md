@@ -46,12 +46,16 @@ Do not use `box configure:environments:get --current` as a routine check because
 
 ## Authentication paths
 
+These commands are interactive — they open a browser or prompt for input. Tell the user to run them in their own terminal rather than executing them as the agent.
+
 - Fastest OAuth flow with the official Box CLI app:
   - `box login -d`
 - OAuth with your own Box app:
   - `box login --platform-app`
 - Add an environment from an app config file:
   - `box configure:environments:add PATH`
+
+Never ask the user to paste credentials, tokens, or secrets into the conversation. If credentials are needed, guide the user to set them as environment variables or in the appropriate config file.
 
 After login or environment setup, re-run `box users:get me --json` to confirm the CLI can make authenticated calls.
 

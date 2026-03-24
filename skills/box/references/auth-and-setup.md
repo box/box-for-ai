@@ -21,7 +21,7 @@ When this skill is installed as a platform plugin (e.g., Cursor, Claude Code), t
 
 If MCP tools are not available in the session, walk the user through these steps:
 
-1. Verify env vars are set: `echo $BOX_CLIENT_ID` (should not be empty)
+1. Check that credentials are set without printing them: `[ -n "$BOX_CLIENT_ID" ] && echo "set" || echo "not set"`. If not set, guide the user to add them to their shell profile or the platform's MCP config file. Never ask the user to paste credentials into the conversation.
 2. Verify the OAuth app has the correct redirect URI for their platform
 3. Verify the platform has third-party plugins enabled
 4. Restart the editor — MCP connections are established at startup

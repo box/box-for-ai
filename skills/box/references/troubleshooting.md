@@ -73,7 +73,7 @@ When using Box CLI, run `box <command> --help` before the first invocation of an
 
 Box MCP tools are not appearing in the session, or MCP calls fail with auth errors.
 
-- `BOX_CLIENT_ID` or `BOX_CLIENT_SECRET` is not set or is incorrect — have the user check with `echo $BOX_CLIENT_ID`
+- `BOX_CLIENT_ID` or `BOX_CLIENT_SECRET` is not set or is incorrect — check without printing: `[ -n "$BOX_CLIENT_ID" ] && echo "set" || echo "not set"`. Guide the user to set them in their shell profile or MCP config file. Never ask the user to paste credentials into the conversation.
 - The Box OAuth 2.0 app is missing the platform's redirect URI (e.g., `cursor://anysphere.cursor-mcp/oauth/callback` for Cursor)
 - The platform's MCP config file has hardcoded credentials that are stale or malformed — check `~/.cursor/mcp.json` if using Cursor
 - Third-party plugins are not enabled in the platform settings

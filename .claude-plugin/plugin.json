@@ -7,5 +7,14 @@
   },
   "keywords": ["box", "content", "cloud-storage", "file-management", "collaboration"],
   "license": "MIT",
-  "repository": "https://github.com/box/box-for-ai"
+  "repository": "https://github.com/box/box-for-ai",
+  "mcpServers": {
+    "box": {
+      "url": "https://mcp.box.com",
+      "auth": {
+        "CLIENT_ID": "${BOX_CLIENT_ID}",
+        "CLIENT_SECRET": "${BOX_CLIENT_SECRET}"
+      }
+    }
+  }
 }

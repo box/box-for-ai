@@ -3,7 +3,6 @@
 ## Table of Contents
 
 - MCP server auth
-  - Config precedence (Cursor)
   - Diagnosing auth failures
   - Retrieving credentials from an existing app
   - Creating a Box OAuth 2.0 app
@@ -19,32 +18,19 @@
 
 ## MCP server auth
 
-When this skill is installed as a platform plugin (e.g., Cursor, Claude Code), the Box MCP server URL is registered via `mcp.json` at the repo root. This file is plugin infrastructure — do not edit it or add credentials to it. It references `${BOX_CLIENT_ID}` and `${BOX_CLIENT_SECRET}` environment variables that users must set in their own shell environment.
-
-### Config precedence (Cursor)
-
-Cursor resolves MCP server config in this order:
-
-1. **Repo-local `mcp.json`** (workspace root) — checked first. If it defines a server, Cursor uses that entry.
-2. **Global `~/.cursor/mcp.json`** — used only when the repo-local config does not define the server.
-
-Because the repo-local `mcp.json` defines the `box` server with `${BOX_CLIENT_ID}` and `${BOX_CLIENT_SECRET}`, those environment variables **must** be set in the shell that launched Cursor. If they are not set, Cursor sends the literal placeholder strings as credentials and auth fails silently. Credentials in `~/.cursor/mcp.json` will not be used as a fallback when the repo-local file already defines the same server name.
+The plugin provides the Box skill and safety rules. The MCP server connection is configured by the user through their platform's MCP settings (e.g., `~/.cursor/mcp.json` in Cursor). This keeps credentials in the user's own config and avoids the complexity of environment variable resolution.
 
 ### Diagnosing auth failures
 
 If MCP tools are unavailable or `mcp_auth` fails, run these checks (never print credential values):
 
-1. Check whether the OAuth URL or error contains literal template strings like `${BOX_CLIENT_ID}` or the URL-encoded form `%7BBOX_CLIENT_ID%7D`. This means the environment variables were never resolved — Cursor sent the placeholder text as the actual client ID.
-2. Verify env vars are set: `[ -n "$BOX_CLIENT_ID" ] && echo "set" || echo "not set"` (same for `BOX_CLIENT_SECRET`).
-3. If either is not set, check whether `~/.cursor/mcp.json` already contains a `box` server entry with `CLIENT_ID` and `CLIENT_SECRET` values (do not print them). If it does, the user has already configured Box credentials — tell them those credentials exist in their global config and guide them to copy the values into their shell profile as `BOX_CLIENT_ID` and `BOX_CLIENT_SECRET` env vars (see "Setting up credentials"). This avoids recreating credentials that already exist.
-4. If no existing credentials were found, ask the user whether they already have a Box OAuth 2.0 app:
+1. **Check `~/.cursor/mcp.json` for a Box server entry.** If it contains a `box` server with `CLIENT_ID` and `CLIENT_SECRET` values, the MCP server should be available. Verify by calling `who_am_i`. If it fails, the OAuth flow may not have been completed — call `mcp_auth` to trigger it.
+2. If `~/.cursor/mcp.json` has no Box server entry, ask the user whether they already have a Box OAuth 2.0 app:
    - **Yes** — direct them to retrieve their credentials (see "Retrieving credentials from an existing app" below) and then configure them (see "Setting up credentials").
    - **No** — walk them through creating one (see "Creating a Box OAuth 2.0 app") and then configuring the credentials.
-5. If both are set, verify the OAuth app has the correct redirect URI for the platform (see below).
-6. Confirm the platform has third-party plugins enabled (Cursor: Settings > Features > "Include third-party Plugins, Skills, and other configs").
-7. Restart the editor — MCP connections are established at startup.
-
-Do **not** direct the user to edit the repo-local `mcp.json`. That file is part of the plugin and declares the server URL with environment variable references. Credentials belong in the user's environment or the platform's global config — never in the repo.
+3. If credentials are configured but auth still fails, verify the OAuth app has the correct redirect URI for the platform (see below).
+4. Confirm the platform has third-party plugins enabled (Cursor: Settings > Features > "Include third-party Plugins, Skills, and other configs").
+5. Restart the editor only as a last resort — MCP connections are established at startup.
 
 ### Retrieving credentials from an existing app
 
@@ -75,20 +61,7 @@ If the user's Box enterprise requires admin approval for new apps, they will nee
 
 ### Setting up credentials
 
-**Recommended — environment variables** (works regardless of which repo is open):
-
-Add these to the shell profile (`~/.zshrc`, `~/.bashrc`, or equivalent):
-
-```sh
-export BOX_CLIENT_ID="<client_id_from_step_5>"
-export BOX_CLIENT_SECRET="<client_secret_from_step_5>"
-```
-
-Then open a **new** terminal window (so the profile is re-sourced) and launch Cursor from that terminal (`cursor .` or `open -a Cursor`). Cursor must be started from a shell that has the env vars — launching from Spotlight or the macOS dock will not inherit them unless the vars are also set via `launchctl setenv` or a similar system-level mechanism.
-
-**Alternative — global MCP config** (only works when no repo-local `mcp.json` defines the same server):
-
-Add credentials to `~/.cursor/mcp.json`:
+Open Cursor's MCP settings (or edit `~/.cursor/mcp.json` directly) and add the Box server:
 
 ```json
 {
@@ -96,26 +69,26 @@ Add credentials to `~/.cursor/mcp.json`:
     "box": {
       "url": "https://mcp.box.com",
       "auth": {
-        "CLIENT_ID": "<client_id>",
-        "CLIENT_SECRET": "<client_secret>"
+        "CLIENT_ID": "<client_id_from_step_5>",
+        "CLIENT_SECRET": "<client_secret_from_step_5>"
       }
     }
   }
 }
 ```
 
-Note: this approach is overridden by any repo-local `mcp.json` that defines a `box` server entry. When working in a repo that includes this plugin, prefer environment variables.
+No terminal restart or environment variables required. Cursor picks up the config immediately on the next MCP connection.
 
 ### Completing auth
 
-After credentials are configured and Cursor is restarted:
+After credentials are configured:
 
 1. The agent calls `mcp_auth` to start the OAuth flow.
 2. A browser window opens with the Box login page — the user authorizes the app.
 3. Box redirects back to Cursor via the registered callback URI.
 4. The agent verifies the connection with `who_am_i`.
 
-If the user cannot resolve MCP auth immediately, fall back to Box CLI for the current session. See the CLI-first local testing section below.
+If the user cannot complete MCP auth immediately, fall back to Box CLI for the current session. See the CLI-first local testing section below.
 
 ## Actor selection checklist
 

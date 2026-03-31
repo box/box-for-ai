@@ -30,7 +30,8 @@ This allows Cursor to complete the OAuth authentication flow with Box.
 
 ### Set your environment variables
 
-The plugin reads credentials from two environment variables:
+The plugin's `mcp.json` registers the Box MCP server and references two
+environment variables for credentials:
 
 ```sh
 export BOX_CLIENT_ID="your_client_id"
@@ -40,25 +41,16 @@ export BOX_CLIENT_SECRET="your_client_secret"
 Add these to your shell profile (`.zshrc`, `.bashrc`, etc.) or use whatever
 secrets management your team prefers.
 
-Alternatively, you can set your credentials directly in Cursor's MCP config
-file (`~/.cursor/mcp.json`):
+> **Important:** Cursor must be launched from a shell that has these env vars.
+> If you open Cursor from Spotlight or the macOS dock, it will not inherit
+> them. After adding the exports, open a **new** terminal and launch Cursor
+> from there (`cursor .` or `open -a Cursor`).
 
-```json
-{
-    "mcpServers": {
-        "box": {
-            "url": "https://mcp.box.com",
-            "auth": {
-                "CLIENT_ID": "your_client_id",
-                "CLIENT_SECRET": "your_client_secret"
-            }
-        }
-    }
-}
-```
-
-If you go this route, be careful not to commit your credentials to version
-control.
+> **Why not `~/.cursor/mcp.json`?** The plugin includes a repo-local
+> `mcp.json` that registers the Box MCP server. Cursor prioritizes repo-local
+> MCP config over the global `~/.cursor/mcp.json` for the same server name,
+> so credentials placed in the global file will not be used while this plugin
+> is active. Environment variables are the recommended approach.
 
 ## Installation
 
@@ -105,7 +97,7 @@ once the plugin is installed.
 
 | File | What it does |
 |---|---|
-| `mcp.json` | Connects Cursor to the remote Box MCP server at `https://mcp.box.com` |
+| `mcp.json` | Registers the remote Box MCP server at `https://mcp.box.com`. Do not edit — credentials are supplied via environment variables, not this file. |
 | `skills/box/SKILL.md` | Teaches the agent Box best practices — API integration patterns, MCP tool usage, and workflow guidance |
 | `rules/box.mdc` | Enforces safety guardrails — confirmation prompts for destructive actions, hub modifications, and content display preferences |
 

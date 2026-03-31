@@ -26,6 +26,7 @@ Implement Box content workflows in application code. Reuse the repository's exis
 
 Follow these steps in order when coding against Box.
 
+0. If the task requires MCP tools and they are unavailable or `mcp_auth` fails, read `references/auth-and-setup.md` and walk the user through the MCP server auth section before proceeding. Do not continue to later steps until MCP auth is resolved or the user opts to fall back to Box CLI.
 1. Inspect the repository for existing Box auth, SDK or HTTP client, env vars, webhook handlers, Box ID persistence, and tests.
 2. Determine the acting identity before choosing endpoints: connected user, enterprise service account, app user, or platform-provided token.
 3. Identify the primary Box object and choose the matching reference from the routing table above.

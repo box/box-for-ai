@@ -39,9 +39,7 @@ If MCP auth still fails after setup, fall back to the Box CLI while the user res
 
 ## When to use MCP vs CLI
 
-The Box MCP server provides tools optimized for agent workflows — content management, search, AI, hubs, collaboration, and document generation — with structured inputs and outputs, plugin-managed auth, and support for concurrent calls. Prefer MCP tools when they cover the operation.
-
-For operations outside the MCP server's current scope, the Box CLI provides access to the full Box API. Check whether `box` is installed and authenticated (`box users:get me --json`), then use the appropriate CLI command. See `references/box-cli.md` for auth setup, common commands, and guardrails.
+Tool selection between MCP and CLI is handled in the main skill workflow — see the tool selection table in `SKILL.md`. In short: MCP provides structured I/O, plugin-managed auth, and concurrent-safe calls; CLI provides full API coverage and compact, field-filtered output. The workflow picks the best available tool per operation.
 
 ## Search
 

@@ -11,30 +11,50 @@ Implement Box content workflows in application code. Reuse the repository's exis
 
 ## Route The Request
 
-| If the user needs... | Primary object | Read first | Pair with | Minimal verification |
-| --- | --- | --- | --- | --- |
-| Working with Box content via MCP tools (search, read, upload, AI queries, metadata extraction) | MCP tool call | `references/mcp-tool-patterns.md` | `references/ai-and-retrieval.md` | `who_am_i` call to verify auth |
-| Box operations not covered by MCP tools, local verification, smoke tests, or debugging | CLI command | `references/box-cli.md` | `references/auth-and-setup.md` | `scripts/box_cli_smoke.py check-auth` then a read command |
-| Uploads, folders, listings, downloads, shared links, collaborations, or metadata | File or folder | `references/content-workflows.md` | `references/auth-and-setup.md` | Read-after-write call using the same actor |
-| Organizing, reorganizing, or batch-moving files across folders; bulk metadata tagging; migrating folder structures | File set or folder tree | `references/bulk-operations.md` | `references/auth-and-setup.md`, `references/content-workflows.md`, `references/ai-and-retrieval.md` | Inventory source, verify move count matches plan |
-| Event-driven ingestion, new-file triggers, or webhook debugging | Webhook or events feed | `references/webhooks-and-events.md` | `references/auth-and-setup.md`, `references/troubleshooting.md` | Signature check plus duplicate-delivery test |
-| Search, document retrieval, summarization, extraction, or Box AI | Search result set or file content | `references/ai-and-retrieval.md` | `references/auth-and-setup.md` | Retrieval-quality check before answer formatting |
-| 401, 403, 404, 409, 429, missing content, or wrong-actor bugs | Existing request path | `references/troubleshooting.md` | `references/auth-and-setup.md` | Reproduce with the exact actor, object ID, and endpoint |
-| Unsure which workflow applies | Unknown | `references/workflows.md` | `references/auth-and-setup.md` | Choose the smallest Box object/action pair first |
+### Tool selection
+
+After completing step 0 (tool inventory), use this table to pick the right tool for the operation:
+
+| Operation type | Prefer | Rationale |
+| --- | --- | --- |
+| Most agent workflows (search, AI, content management, metadata, hubs) | MCP | Structured I/O, concurrent-safe, covers the common cases |
+| Bulk operations (batch moves, folder trees, batch metadata) | CLI or REST | Compact output, `--fields` filtering, full API surface |
+| Verification and smoke tests | CLI | Reproducible, user can copy-paste commands |
+| Operations outside MCP scope | CLI | Full API coverage |
+| Building application code (SDK/REST endpoints, webhook handlers) | SDK or REST in code | Not agent tooling — write code the user ships |
+
+MCP covers the majority of common agent workflows and is the default when it has a matching tool. Use CLI when the operation falls outside MCP's scope, when compact and field-filtered output matters, or for reproducible verification commands. When only one tool is available, use it. When neither is available, walk the user through setup — MCP is faster to configure (no installation); CLI covers the full API.
+
+### Domain routing
+
+Choose which reference files to read based on what the user needs:
+
+| If the user needs... | Read first | Pair with | Minimal verification |
+| --- | --- | --- | --- |
+| Uploads, folders, listings, downloads, shared links, collaborations, or metadata | `references/content-workflows.md` | `references/auth-and-setup.md` | Read-after-write call using the same actor |
+| Organizing, reorganizing, or batch-moving files across folders; bulk metadata tagging; migrating folder structures | `references/bulk-operations.md` | `references/content-workflows.md`, `references/auth-and-setup.md`, `references/ai-and-retrieval.md` | Inventory source, verify move count matches plan |
+| Event-driven ingestion, new-file triggers, or webhook debugging | `references/webhooks-and-events.md` | `references/auth-and-setup.md`, `references/troubleshooting.md` | Signature check plus duplicate-delivery test |
+| Search, document retrieval, summarization, extraction, or Box AI | `references/ai-and-retrieval.md` | `references/auth-and-setup.md` | Retrieval-quality check before answer formatting |
+| 401, 403, 404, 409, 429, missing content, or wrong-actor bugs | `references/troubleshooting.md` | `references/auth-and-setup.md` | Reproduce with the exact actor, object ID, and endpoint |
+| Unsure which workflow applies | `references/workflows.md` | `references/auth-and-setup.md` | Choose the smallest Box object/action pair first |
 
 ## Workflow
 
 Follow these steps in order when coding against Box.
 
-0. If the task requires MCP tools and they are unavailable or `mcp_auth` fails, read `references/auth-and-setup.md` and walk the user through the MCP server auth section before proceeding. Do not continue to later steps until MCP auth is resolved or the user opts to fall back to Box CLI.
+0. Inventory available Box tooling:
+   - **MCP**: Call `who_am_i`. If it fails, try `mcp_auth`. If auth still fails, read `references/auth-and-setup.md` for MCP setup steps. Record whether MCP is available.
+   - **CLI**: Run `box users:get me --json`. Record whether CLI is available.
+   - If neither is available, walk the user through setup. MCP is faster to configure (no installation required) and covers the most common workflows; CLI covers the full API and produces compact, field-filtered output. Let the user choose, or default to MCP for first-time setup.
+   - If the task is building application code (adding SDK endpoints, webhook handlers), tooling availability is secondary — proceed to step 1.
 1. Inspect the repository for existing Box auth, SDK or HTTP client, env vars, webhook handlers, Box ID persistence, and tests.
 2. Determine the acting identity before choosing endpoints: connected user, enterprise service account, app user, or platform-provided token.
-3. Identify the primary Box object and choose the matching reference from the routing table above.
+3. Select the tool using the tool selection table and identify the domain reference using the domain routing table above.
 4. Confirm whether the task changes access or data exposure. Shared links, collaborations, auth changes, large-scale downloads, and broad AI retrieval all need explicit user confirmation before widening access or scope.
-5. Read only the matching reference files:
+5. Read the reference for the selected tool (`references/mcp-tool-patterns.md` for MCP, `references/box-cli.md` for CLI) and the domain reference from the routing table:
    - Box MCP tool usage patterns: `references/mcp-tool-patterns.md`
-   - Auth setup, actor selection, SDK vs REST: `references/auth-and-setup.md`
    - Box CLI local verification: `references/box-cli.md`
+   - Auth setup, actor selection, SDK vs REST: `references/auth-and-setup.md`
    - Workflow router: `references/workflows.md`
    - Content operations: `references/content-workflows.md`
    - Bulk file organization, batch moves, folder restructuring: `references/bulk-operations.md`

@@ -16,7 +16,7 @@ Check out the latest and full list of skills [here](https://skills.sh/box/box-fo
 
 ### As a Platform Plugin
 
-This repo can also be installed as a plugin for supported platforms, which configures the Box MCP server automatically — giving the agent direct access to your files, folders, hubs, and Box AI tools.
+This repo can also be installed as a plugin for supported platforms. You configure the Box MCP server connection through your platform's MCP settings — see the setup guide for your platform below.
 
 | Platform | Setup guide |
 |---|---|

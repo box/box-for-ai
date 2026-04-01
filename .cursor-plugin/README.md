@@ -4,9 +4,9 @@ Search, read, and manage your Box content directly from Cursor — plus tap into
 Box AI for Q&A, summarization, and metadata extraction without leaving your
 editor.
 
-When installed as a Cursor plugin, the Box MCP server is configured
-automatically — giving the agent direct access to your files, folders, hubs,
-and Box AI tools.
+The plugin provides the Box skill and safety rules. You configure the MCP
+server connection through Cursor's MCP settings — no environment variables or
+terminal restarts required.
 
 ## Prerequisites
 
@@ -28,37 +28,24 @@ cursor://anysphere.cursor-mcp/oauth/callback
 
 This allows Cursor to complete the OAuth authentication flow with Box.
 
-### Set your environment variables
+### Add the Box MCP server
 
-The plugin reads credentials from two environment variables:
-
-```sh
-export BOX_CLIENT_ID="your_client_id"
-export BOX_CLIENT_SECRET="your_client_secret"
-```
-
-Add these to your shell profile (`.zshrc`, `.bashrc`, etc.) or use whatever
-secrets management your team prefers.
-
-Alternatively, you can set your credentials directly in Cursor's MCP config
-file (`~/.cursor/mcp.json`):
+Open Cursor's MCP settings (or edit `~/.cursor/mcp.json` directly) and add
+the Box server with your credentials:
 
 ```json
 {
-    "mcpServers": {
-        "box": {
-            "url": "https://mcp.box.com",
-            "auth": {
-                "CLIENT_ID": "your_client_id",
-                "CLIENT_SECRET": "your_client_secret"
-            }
-        }
+  "mcpServers": {
+    "box": {
+      "url": "https://mcp.box.com",
+      "auth": {
+        "CLIENT_ID": "your_client_id",
+        "CLIENT_SECRET": "your_client_secret"
+      }
     }
+  }
 }
 ```
-
-If you go this route, be careful not to commit your credentials to version
-control.
 
 ## Installation
 
@@ -98,14 +85,12 @@ Install the Box plugin from the [Cursor Marketplace](https://cursor.com/marketpl
    other configs** is enabled under **Features**.
 5. Restart Cursor.
 
-The MCP server connection, skill, and rules are all configured automatically
-once the plugin is installed.
+The skill and rules are configured automatically once the plugin is installed.
 
 ## What's included
 
 | File | What it does |
 |---|---|
-| `mcp.json` | Connects Cursor to the remote Box MCP server at `https://mcp.box.com` |
 | `skills/box/SKILL.md` | Teaches the agent Box best practices — API integration patterns, MCP tool usage, and workflow guidance |
 | `rules/box.mdc` | Enforces safety guardrails — confirmation prompts for destructive actions, hub modifications, and content display preferences |
 

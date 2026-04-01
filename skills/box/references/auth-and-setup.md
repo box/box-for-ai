@@ -3,6 +3,11 @@
 ## Table of Contents
 
 - MCP server auth
+  - Diagnosing auth failures
+  - Retrieving credentials from an existing app
+  - Creating a Box OAuth 2.0 app
+  - Setting up credentials
+  - Completing auth
 - Actor selection checklist
 - CLI-first local testing
 - Choosing the auth path
@@ -13,20 +18,77 @@
 
 ## MCP server auth
 
-When this skill is installed as a platform plugin (e.g., Cursor, Claude Code), the Box MCP server is configured via `mcp.json` at the repo root. Auth requires:
+The plugin provides the Box skill and safety rules. The MCP server connection is configured by the user through their platform's MCP settings (e.g., `~/.cursor/mcp.json` in Cursor). This keeps credentials in the user's own config and avoids the complexity of environment variable resolution.
 
-- A Box OAuth 2.0 app created in the [Box Developer Console](https://app.box.com/developers/console) with [OAuth 2.0 authentication](https://developer.box.com/guides/authentication/oauth2/oauth2-setup/)
-- `BOX_CLIENT_ID` and `BOX_CLIENT_SECRET` set as environment variables, or configured directly in the platform's MCP config file (e.g., `~/.cursor/mcp.json`)
-- The platform's OAuth redirect URI registered in the Box app (e.g., `cursor://anysphere.cursor-mcp/oauth/callback` for Cursor)
+### Diagnosing auth failures
 
-If MCP tools are not available in the session, walk the user through these steps:
+If MCP tools are unavailable or `mcp_auth` fails, run these checks (never print credential values):
 
-1. Check that credentials are set without printing them: `[ -n "$BOX_CLIENT_ID" ] && echo "set" || echo "not set"`. If not set, guide the user to add them to their shell profile or the platform's MCP config file. Never ask the user to paste credentials into the conversation.
-2. Verify the OAuth app has the correct redirect URI for their platform
-3. Verify the platform has third-party plugins enabled
-4. Restart the editor — MCP connections are established at startup
+1. **Check `~/.cursor/mcp.json` for a Box server entry.** If it contains a `box` server with `CLIENT_ID` and `CLIENT_SECRET` values, the MCP server should be available. Verify by calling `who_am_i`. If it fails, the OAuth flow may not have been completed — call `mcp_auth` to trigger it.
+2. If `~/.cursor/mcp.json` has no Box server entry, ask the user whether they already have a Box OAuth 2.0 app:
+   - **Yes** — direct them to retrieve their credentials (see "Retrieving credentials from an existing app" below) and then configure them (see "Setting up credentials").
+   - **No** — walk them through creating one (see "Creating a Box OAuth 2.0 app") and then configuring the credentials.
+3. If credentials are configured but auth still fails, verify the OAuth app has the correct redirect URI for the platform (see below).
+4. Confirm the platform has third-party plugins enabled (Cursor: Settings > Features > "Include third-party Plugins, Skills, and other configs").
+5. Restart the editor only as a last resort — MCP connections are established at startup.
 
-If the user cannot resolve MCP auth immediately, fall back to Box CLI for the current session. See the CLI-first local testing section below.
+### Retrieving credentials from an existing app
+
+If the user already has a Box OAuth 2.0 app:
+
+1. Go to the [Box Developer Console](https://app.box.com/developers/console).
+2. Find the existing app and open it.
+3. On the **Configuration** tab, copy the **Client ID** and **Client Secret**.
+4. Verify that the platform's redirect URI is listed under **OAuth 2.0 Redirect URI** (e.g., `cursor://anysphere.cursor-mcp/oauth/callback` for Cursor). Add it if missing, then click **Save Changes**.
+
+Then proceed to "Setting up credentials" below.
+
+### Creating a Box OAuth 2.0 app
+
+Walk the user through these steps if they do not already have a Box OAuth app:
+
+1. Go to the [Box Developer Console](https://app.box.com/developers/console).
+2. Click **Create New App** and choose **Custom App**.
+3. Select **User Authentication (OAuth 2.0)** as the authentication method.
+4. Name the app (e.g., "Cursor MCP") and click **Create App**.
+5. On the app's **Configuration** tab, copy the **Client ID** and **Client Secret**.
+6. Under **OAuth 2.0 Redirect URI**, add the redirect URI for the platform:
+   - Cursor: `cursor://anysphere.cursor-mcp/oauth/callback`
+   - Claude Code: follow the platform's MCP OAuth callback format
+7. Click **Save Changes**.
+
+If the user's Box enterprise requires admin approval for new apps, they will need to submit the app for authorization in the [Admin Console](https://developer.box.com/guides/authorization/) before it can complete the OAuth flow.
+
+### Setting up credentials
+
+Open Cursor's MCP settings (or edit `~/.cursor/mcp.json` directly) and add the Box server:
+
+```json
+{
+  "mcpServers": {
+    "box": {
+      "url": "https://mcp.box.com",
+      "auth": {
+        "CLIENT_ID": "<client_id_from_step_5>",
+        "CLIENT_SECRET": "<client_secret_from_step_5>"
+      }
+    }
+  }
+}
+```
+
+No terminal restart or environment variables required. Cursor picks up the config immediately on the next MCP connection.
+
+### Completing auth
+
+After credentials are configured:
+
+1. The agent calls `mcp_auth` to start the OAuth flow.
+2. A browser window opens with the Box login page — the user authorizes the app.
+3. Box redirects back to Cursor via the registered callback URI.
+4. The agent verifies the connection with `who_am_i`.
+
+If the user cannot complete MCP auth immediately, fall back to Box CLI for the current session. See the CLI-first local testing section below.
 
 ## Actor selection checklist
 

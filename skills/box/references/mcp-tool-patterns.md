@@ -6,17 +6,14 @@ Best-practice patterns for working with Box content via the Box MCP server. The 
 
 ## MCP auth and setup
 
-The Box MCP server authenticates via OAuth 2.0. The plugin's `mcp.json` reads credentials from two environment variables:
+The Box MCP server authenticates via OAuth 2.0. The MCP server connection is configured by the user through their platform's MCP settings (e.g., `~/.cursor/mcp.json` in Cursor). This keeps credentials in the user's own config and avoids the complexity of environment variable resolution.
 
-- `BOX_CLIENT_ID` — from the Box OAuth 2.0 app's Configuration tab
-- `BOX_CLIENT_SECRET` — from the same tab
-
-The Box OAuth app must also have the platform's redirect URI registered (e.g., `cursor://anysphere.cursor-mcp/oauth/callback` for Cursor). See the platform-specific setup guide for the exact URI and step-by-step instructions.
+The Box OAuth app must also have the platform's redirect URI registered (e.g., `cursor://anysphere.cursor-mcp/oauth/callback` for Cursor). See `references/auth-and-setup.md` for detailed step-by-step instructions on creating an OAuth app, retrieving credentials, and configuring the MCP server.
 
 If MCP tools are not appearing in the session:
 
-1. Check that credentials are set without printing them: `[ -n "$BOX_CLIENT_ID" ] && echo "set" || echo "not set"`. If not set, guide the user to add them to their shell profile. Never ask the user to paste credentials into the conversation.
-2. Check whether the platform's MCP config file exists (e.g., `~/.cursor/mcp.json` for Cursor). If the user has already configured it, respect their setup. If it does not exist or does not include a `box` entry, offer to create or update it with the following template that references environment variables:
+1. Check `~/.cursor/mcp.json` for a Box server entry. If it contains a `box` server with `CLIENT_ID` and `CLIENT_SECRET` values, the MCP server should be available. Verify by calling `who_am_i`. If it fails, the OAuth flow may not have been completed — call `mcp_auth` to trigger it.
+2. If no Box server entry exists, guide the user through `references/auth-and-setup.md` to create or retrieve OAuth credentials and add the server:
 
 ```json
 {
@@ -24,19 +21,19 @@ If MCP tools are not appearing in the session:
     "box": {
       "url": "https://mcp.box.com",
       "auth": {
-        "CLIENT_ID": "${BOX_CLIENT_ID}",
-        "CLIENT_SECRET": "${BOX_CLIENT_SECRET}"
+        "CLIENT_ID": "<client_id>",
+        "CLIENT_SECRET": "<client_secret>"
       }
     }
   }
 }
 ```
 
-If the file already contains other MCP servers, merge the `box` entry into the existing `mcpServers` object — do not overwrite the file. The `${...}` syntax references environment variables so secrets stay in the user's shell profile. Alternatively, the user can set their client ID and secret directly in this config file — that is safe since `~/.cursor/mcp.json` is a local file and not version-controlled. Never write credentials into the conversation or into files inside a repository.
+If the file already contains other MCP servers, merge the `box` entry into the existing `mcpServers` object — do not overwrite the file. Never write credentials into the conversation or into files inside a repository.
 
 3. Confirm the OAuth app has the correct redirect URI for the platform.
 4. Confirm the platform has third-party plugins enabled (e.g., in Cursor: Settings > Features > "Include third-party Plugins, Skills, and other configs").
-5. Restart the editor after making changes — MCP server connections are established at startup.
+5. Restart the editor only as a last resort — MCP connections are established at startup.
 
 If MCP auth still fails after setup, fall back to the Box CLI while the user resolves the connection. See `references/box-cli.md` for CLI auth and common commands.
 

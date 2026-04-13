@@ -11,14 +11,15 @@
 
 ## When to use the CLI
 
-The Box CLI provides access to the full Box API. Use it for:
+Tool selection between MCP and CLI is handled in the main skill workflow — see the tool selection table in `SKILL.md`. The CLI is particularly strong for:
 
-- **Operations outside the MCP server's current scope** — if a Box MCP tool isn't available for the task, the CLI can likely handle it.
+- **Full API coverage** — if a Box MCP tool isn't available for the task, the CLI can likely handle it.
+- **Compact, controllable output** — `--fields` and `--json` flags let you request exactly the data you need.
 - **Local verification and smoke tests** — quick inspection without changing application code.
 - **Actor testing** — verify behavior as the current CLI actor or impersonate with `--as-user`.
 - **Debugging** — reproduce failures with exact actor, object ID, and endpoint.
 
-When Box MCP tools cover the operation, prefer MCP — it provides structured I/O designed for agent interaction and supports concurrent calls. The CLI should be run strictly one command at a time (concurrent CLI invocations cause auth conflicts).
+The CLI should be run strictly one command at a time (concurrent CLI invocations cause auth conflicts).
 
 Use `scripts/box_rest.py` instead when:
 

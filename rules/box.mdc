@@ -54,12 +54,13 @@ Before uploading to a folder that is externally shared, warn the user that the
 upload may be blocked by Box and suggest using an internal folder instead. Let
 the user decide whether to proceed.
 
-## Use the CLI for operations outside MCP scope
+## Using the Box CLI
 
-For operations not covered by the Box MCP server, check whether the Box CLI
-is installed and authenticated (`box users:get me --json`) and use the
-appropriate CLI command. The CLI provides access to the full Box API. See
-`references/box-cli.md` for auth setup, common commands, and guardrails.
+The Box CLI provides access to the full Box API. Use it for operations not
+covered by the MCP server, or when its compact output and full API coverage
+are a better fit for the task. Check whether the Box CLI is installed and
+authenticated (`box users:get me --json`), then use the appropriate command.
+See `references/box-cli.md` for auth setup, common commands, and guardrails.
 
 If neither MCP tools nor the CLI can complete the task, tell the user directly
 and suggest alternatives.

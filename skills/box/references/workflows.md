@@ -4,6 +4,7 @@
 
 - Box MCP tool usage
 - Box CLI local verification
+- Direct REST fallback
 - Content workflows
 - Webhooks and events
 - AI and retrieval
@@ -28,6 +29,15 @@ Open `references/box-cli.md` for:
 - Safe CLI auth checks
 - `--as-user` verification
 - Quick local reads and writes without changing app code
+
+## Direct REST fallback
+
+Open `references/rest-calls.md` for:
+
+- Last-resort REST usage after MCP and CLI setup paths fail
+- Required explicit user confirmation before REST calls
+- `BOX_ACCESS_TOKEN` setup and safe token handling
+- Canonical `curl` templates and error/backoff guidance
 
 ## Content workflows
 

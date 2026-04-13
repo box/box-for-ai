@@ -21,11 +21,13 @@ Tool selection between MCP and CLI is handled in the main skill workflow — see
 
 The CLI should be run strictly one command at a time (concurrent CLI invocations cause auth conflicts).
 
-Use `scripts/box_rest.py` instead when:
+Use direct REST calls instead when:
 
-- The repository already uses token-based REST verification
-- The task requires a raw bearer token from the surrounding platform
-- Box CLI is not installed or not authenticated
+- MCP remains unavailable after setup attempts
+- Box CLI is not installed, cannot be authenticated, or is not an option for the user
+- The user explicitly confirms they want REST fallback
+
+For REST fallback request patterns and auth guidance, read `references/rest-calls.md`.
 
 ## Safe auth checks
 
@@ -35,12 +37,6 @@ Use these commands to confirm CLI availability and auth without printing secrets
 command -v box
 box --version
 box users:get me --json
-```
-
-Prefer the bundled wrapper:
-
-```bash
-python3 scripts/box_cli_smoke.py check-auth
 ```
 
 Do not use `box configure:environments:get --current` as a routine check because it can print sensitive environment details.
@@ -77,15 +73,6 @@ Write checks:
 box folders:create 0 "codex-smoke-test" --json
 box files:upload ./artifact.pdf --parent-id 0 --json
 box shared-links:create 12345 file --access company --json
-```
-
-Wrapper equivalents:
-
-```bash
-python3 scripts/box_cli_smoke.py get-folder 0 --fields id name item_collection
-python3 scripts/box_cli_smoke.py list-folder-items 0 --max-items 20
-python3 scripts/box_cli_smoke.py search "invoice" --limit 10
-python3 scripts/box_cli_smoke.py create-folder 0 "codex-smoke-test"
 ```
 
 ## Actor controls

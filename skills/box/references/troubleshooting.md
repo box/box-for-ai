@@ -82,7 +82,7 @@ Box MCP tools are not appearing in the session, or MCP calls fail with auth erro
 
 **Quick diagnostic:** If other MCP servers work but Box does not, the issue is Box-specific auth. If no MCP servers work, the issue is platform configuration.
 
-**Workaround:** Fall back to Box CLI while the user resolves MCP auth. See `references/box-cli.md` for CLI auth setup.
+**Workaround:** Fall back to Box CLI while the user resolves MCP auth. See `references/box-cli.md` for CLI auth setup. If CLI is not available, request explicit user confirmation before using REST fallback and follow `references/rest-calls.md`.
 
 ## CLI auth problems
 

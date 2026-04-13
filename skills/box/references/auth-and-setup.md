@@ -113,10 +113,14 @@ When the task is a local smoke test, quick inspection, or one-off verification f
 - Use `--as-user <id>` when you need to verify behavior as a managed user or another actor allowed by the current Box environment.
 - Use `-t <token>` only when the task explicitly requires a direct bearer token instead of the current CLI environment.
 - Avoid `box configure:environments:get --current` as a routine auth check because it can print sensitive environment details.
-- Prefer the bundled `scripts/box_cli_smoke.py` wrapper when you want deterministic CLI-based verification from the skill.
+- For token-first REST verification, prefer environment-based auth (for example `BOX_ACCESS_TOKEN`) and pass the token via `Authorization: Bearer ...` headers. Avoid printing or echoing token values in logs or command output.
 
 ## Choosing the auth path
 
+- Preferred order for agent operations: MCP first, CLI second, direct REST last.
+- If MCP auth fails, guide the user through MCP setup and retry before shifting tools.
+- If CLI is needed, guide the user through CLI login and verify with `box users:get me --json` before shifting tools.
+- Use direct REST only after MCP and CLI remain unavailable (or CLI is explicitly declined) and after the user explicitly approves REST fallback.
 - Reuse the repository's existing Box auth flow if one already exists.
 - Use a user-auth flow when end users connect their own Box accounts and the app acts as that user.
 - Use the enterprise or server-side pattern already approved for the Box app when the backend runs unattended or manages enterprise content.
@@ -127,6 +131,7 @@ When the task is a local smoke test, quick inspection, or one-off verification f
 
 - Use an official Box SDK when the target language already has one in the codebase or the team prefers SDK-managed models and pagination.
 - Use direct REST calls when the project already centers on a generic HTTP client, only a few endpoints are needed, or SDK support does not match the feature set.
+- In agent-driven operations, direct REST is a fallback path. Do not use it by default when MCP or CLI can be set up.
 - Avoid mixing SDK abstractions and handwritten REST calls for the same feature unless there is a clear gap.
 - Preserve the project's existing retry, logging, and error-normalization patterns.
 

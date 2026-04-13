@@ -35,11 +35,11 @@ If the file already contains other MCP servers, merge the `box` entry into the e
 4. Confirm the platform has third-party plugins enabled (e.g., in Cursor: Settings > Features > "Include third-party Plugins, Skills, and other configs").
 5. Restart the editor only as a last resort — MCP connections are established at startup.
 
-If MCP auth still fails after setup, fall back to the Box CLI while the user resolves the connection. See `references/box-cli.md` for CLI auth and common commands.
+If MCP auth still fails after setup, fall back to the Box CLI while the user resolves the connection. See `references/box-cli.md` for CLI auth and common commands. If CLI is unavailable or the user declines CLI, ask for explicit confirmation before using direct REST fallback and then use `references/rest-calls.md`.
 
 ## When to use MCP vs CLI
 
-Tool selection between MCP and CLI is handled in the main skill workflow — see the tool selection table in `SKILL.md`. In short: MCP provides structured I/O, plugin-managed auth, and concurrent-safe calls; CLI provides full API coverage and compact, field-filtered output. The workflow picks the best available tool per operation.
+Tool selection between MCP and CLI is handled in the main skill workflow — see the tool selection table in `SKILL.md`. In short: MCP provides structured I/O, plugin-managed auth, and concurrent-safe calls; CLI provides full API coverage and compact, field-filtered output. Direct REST is last-resort fallback only, and requires explicit user confirmation.
 
 ## Search
 

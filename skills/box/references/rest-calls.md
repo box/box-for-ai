@@ -27,9 +27,10 @@ When this file and current Box docs disagree, follow current Box docs and OpenAP
 Before sending requests:
 
 1. Ask the user to set `BOX_ACCESS_TOKEN` in their environment.
-2. Confirm the token is present without printing it:
+2. If `BOX_ACCESS_TOKEN` is missing or expired, follow `references/auth-and-setup.md` to choose and complete the appropriate auth flow, then set `BOX_ACCESS_TOKEN` for the current session.
+3. Confirm the token is present without printing it:
    - `test -n "$BOX_ACCESS_TOKEN" && echo "BOX_ACCESS_TOKEN is set"`
-3. Never echo or log token values.
+4. Never echo or log token values.
 
 ## Safe request templates
 

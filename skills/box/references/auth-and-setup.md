@@ -121,6 +121,7 @@ When the task is a local smoke test, quick inspection, or one-off verification f
 - If MCP auth fails, guide the user through MCP setup and retry before shifting tools.
 - If CLI is needed, guide the user through CLI login and verify with `box users:get me --json` before shifting tools.
 - Use direct REST only after MCP and CLI remain unavailable (or CLI is explicitly declined) and after the user explicitly approves REST fallback.
+- For REST fallback, prefer obtaining a fresh access token from configured Box app credentials/OAuth flow over relying on manually copied short-lived developer tokens.
 - Reuse the repository's existing Box auth flow if one already exists.
 - Use a user-auth flow when end users connect their own Box accounts and the app acts as that user.
 - Use the enterprise or server-side pattern already approved for the Box app when the backend runs unattended or manages enterprise content.

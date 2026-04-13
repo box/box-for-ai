@@ -7,7 +7,7 @@
     "name": "Box"
   },
   "repository": "https://github.com/box/box-for-ai",
-  "homepage": "https://developer.box.com/guides/box-mcp",
+  "homepage": "https://developer.box.com/",
   "license": "MIT",
   "keywords": ["box", "ai", "box-ai", "content", "cloud-storage", "mcp", "file-management", "collaboration"],
   "logo": "assets/logo.svg"

@@ -2,7 +2,7 @@
 
 Agent Skills to help developers using AI agents work with Box. Whether you're building Box integrations in code, working with Box content via MCP tools, configuring webhooks, or using Box AI retrieval — this plugin gives your assistant the context it needs to do it right.
 
-The skills in this repo follow the [Agent Skills](https://agentskills.io/) format and can also be installed as a plugin for [Cursor](https://cursor.com) or [Claude Code](https://code.claude.com).
+The skills in this repo follow the [Agent Skills](https://agentskills.io/) format and can also be installed as a plugin for platforms like Codex, [Cursor](https://cursor.com), and [Claude Code](https://code.claude.com).
 
 ## Installation
 
@@ -20,6 +20,7 @@ This repo can also be installed as a plugin for supported platforms. You configu
 
 | Platform | Setup guide |
 |---|---|
+| Codex | [`.codex-plugin/README.md`](.codex-plugin/README.md) |
 | Cursor | [`.cursor-plugin/README.md`](.cursor-plugin/README.md) |
 | Claude Code | [`.claude-plugin/README.md`](.claude-plugin/README.md) |
 
@@ -55,25 +56,25 @@ The Box skill follows the [Agent Skills Open Standard](https://agentskills.io/):
 
 - `SKILL.md` - Skill manifest with frontmatter, routing table, workflow steps, and guardrails
 - `references/` - Individual reference files (auth, content workflows, MCP tool patterns, AI/retrieval, etc.)
-- `scripts/` - Testing and REST API helper scripts
 - `examples/` - Example prompts
 
 ## Prerequisites
 
-- **Python 3.10+** — Verification scripts use only the standard library.
 - **Box CLI** (optional) — Install from [developer.box.com/guides/cli](https://developer.box.com/guides/cli) for CLI-first verification.
-- **BOX_ACCESS_TOKEN** — For REST-based verification when Box CLI is unavailable.
+- **BOX_ACCESS_TOKEN** (optional) — For direct REST verification when Box CLI is unavailable.
 
 ## Quick Verification
 
+Preferred order for agent tooling is MCP first, Box CLI second, and direct REST only as a last-resort fallback.
+
 ```bash
 # With Box CLI installed and authenticated:
-python3 skills/box/scripts/box_cli_smoke.py check-auth
-python3 skills/box/scripts/box_cli_smoke.py list-folder-items 0 --max-items 5
+box users:get me --json
+box folders:items 0 --json --max-items 5
 
-# With a bearer token:
+# Last-resort fallback (for sessions where MCP/CLI are unavailable):
 export BOX_ACCESS_TOKEN="your-token"
-python3 skills/box/scripts/box_rest.py get-item --item-type folder --item-id 0
+curl -sS -H "Authorization: Bearer $BOX_ACCESS_TOKEN" -H "Accept: application/json" "https://api.box.com/2.0/folders/0"
 ```
 
 ## Contributing

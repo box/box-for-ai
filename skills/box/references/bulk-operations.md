@@ -57,10 +57,10 @@ List everything in the source folder(s). Paginate fully — do not assume a sing
 
 ```bash
 # CLI — list up to 1000 items
-python3 scripts/box_cli_smoke.py list-folder-items <FOLDER_ID> --max-items 1000 --fields id name type
+box folders:items <FOLDER_ID> --json --max-items 1000 --fields id,name,type
 
 # REST — paginate with offset
-python3 scripts/box_rest.py get-folder-items --folder-id <FOLDER_ID> --limit 1000 --fields id name type
+curl -sS -H "Authorization: Bearer $BOX_ACCESS_TOKEN" -H "Accept: application/json" "https://api.box.com/2.0/folders/<FOLDER_ID>/items?limit=1000&offset=0&fields=id,name,type"
 ```
 
 For folders with more items than one page returns, increment the offset and repeat until all items are captured.
@@ -153,12 +153,12 @@ Create target folders **one at a time, serially**. After each creation, record t
 
 ```bash
 # CLI
-python3 scripts/box_cli_smoke.py create-folder <PARENT_ID> "SEC Filings"
+box folders:create <PARENT_ID> "SEC Filings" --json
 # then
-python3 scripts/box_cli_smoke.py create-folder <SEC_FILINGS_ID> "10-K"
+box folders:create <SEC_FILINGS_ID> "10-K" --json
 
 # REST
-python3 scripts/box_rest.py create-folder --parent-folder-id <PARENT_ID> --name "SEC Filings"
+curl -sS -X POST -H "Authorization: Bearer $BOX_ACCESS_TOKEN" -H "Content-Type: application/json" -H "Accept: application/json" "https://api.box.com/2.0/folders" -d '{"name":"SEC Filings","parent":{"id":"<PARENT_ID>"}}'
 ```
 
 Handle `409 Conflict` by listing the parent folder to find the existing folder's ID rather than failing the entire operation.
@@ -170,11 +170,11 @@ Create parent folders before child folders. Process the tree top-down.
 Move files into their target folders **one at a time, serially**. Each move is a PUT that updates the file's parent.
 
 ```bash
-# REST (preferred for bulk — more reliable than CLI for high-volume moves)
-python3 scripts/box_rest.py move-item --item-type file --item-id <FILE_ID> --parent-folder-id <TARGET_FOLDER_ID>
+# REST (fallback when CLI is unavailable or not an option)
+curl -sS -X PUT -H "Authorization: Bearer $BOX_ACCESS_TOKEN" -H "Content-Type: application/json" -H "Accept: application/json" "https://api.box.com/2.0/files/<FILE_ID>" -d '{"parent":{"id":"<TARGET_FOLDER_ID>"}}'
 
 # CLI
-python3 scripts/box_cli_smoke.py move-item <FILE_ID> file --parent-id <TARGET_FOLDER_ID>
+box files:move <FILE_ID> <TARGET_FOLDER_ID> --json
 ```
 
 After each successful move, record it. If a move fails, log the file ID and error and continue with the remaining files — do not abort the entire batch.
@@ -183,7 +183,7 @@ After each successful move, record it. If a move fails, log the file ID and erro
 
 Insert a short delay between operations when working with large batches (100+ items). A 200–500ms pause between requests helps stay within rate limits without dramatically increasing total time.
 
-When using REST directly in application code (not via the scripts), implement proper 429 backoff instead of fixed delays.
+When using REST directly in application code, implement proper 429 backoff instead of fixed delays.
 
 ## Step 6 — Verify
 
@@ -194,7 +194,7 @@ After all moves complete:
 3. Report any items that failed to move and the error encountered.
 
 ```bash
-python3 scripts/box_cli_smoke.py list-folder-items <TARGET_FOLDER_ID> --max-items 1000 --fields id name
+box folders:items <TARGET_FOLDER_ID> --json --max-items 1000 --fields id,name
 ```
 
 ## Rate-limit and backoff handling
@@ -206,18 +206,18 @@ When Box returns `429 Too Many Requests`:
 3. Do not retry other requests during the wait — the limit is typically per-user or per-app, so other requests will also be throttled.
 4. After a successful retry, resume normal pacing.
 
-In application code, implement exponential backoff with jitter starting at the `Retry-After` value. In script-based or CLI-based operations, a simple sleep-and-retry is sufficient.
+In application code, implement exponential backoff with jitter starting at the `Retry-After` value. In manual CLI operations, a simple sleep-and-retry is sufficient.
 
 ## REST vs CLI for bulk work
 
-| Factor | REST (`box_rest.py` or SDK) | CLI (`box_cli_smoke.py`) |
+| Factor | REST (direct API or SDK) | CLI (`box` command) |
 | --- | --- | --- |
 | Concurrency safety | Can handle controlled concurrency with proper rate-limit handling | Must run serially — no parallel invocations |
 | Overhead per call | Lower — direct HTTP | Higher — process spawn per command |
 | Error handling | Structured JSON responses, easy to parse and retry | Exit codes and mixed output, harder to automate |
-| Best for | Bulk moves, batch metadata writes, any operation over ~50 items | Quick verification, small batches, interactive debugging |
+| Best for | Last-resort fallback, or application code that already uses REST/SDK | Agent-driven operations when CLI is available |
 
-**Default to REST for bulk operations.** Fall back to CLI when REST auth is unavailable or the operator specifically prefers CLI-based workflows.
+**Default to CLI for agent-driven bulk operations.** Use REST only after MCP/CLI setup attempts fail or CLI is not an option and the user explicitly confirms REST fallback.
 
 ## Partial failure recovery
 

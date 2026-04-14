@@ -6,13 +6,13 @@ Best-practice patterns for working with Box content via the Box MCP server. The 
 
 ## MCP auth and setup
 
-The Box MCP server authenticates via OAuth 2.0. The MCP server connection is configured by the user through their platform's MCP settings (e.g., `~/.cursor/mcp.json` in Cursor). This keeps credentials in the user's own config and avoids the complexity of environment variable resolution.
+The Box MCP server authenticates via OAuth 2.0. The MCP server connection is configured by the user through their platform's MCP settings/config file. This keeps credentials in the user's own config and avoids the complexity of environment variable resolution. For platform-specific config paths and examples, use the setup guides linked from the repository root README.
 
-The Box OAuth app must also have the platform's redirect URI registered (e.g., `cursor://anysphere.cursor-mcp/oauth/callback` for Cursor). See `references/auth-and-setup.md` for detailed step-by-step instructions on creating an OAuth app, retrieving credentials, and configuring the MCP server.
+The Box OAuth app must also have the platform's redirect URI registered (for example, `cursor://anysphere.cursor-mcp/oauth/callback` for Cursor). See `references/auth-and-setup.md` for detailed step-by-step instructions on creating an OAuth app, retrieving credentials, and configuring the MCP server.
 
 If MCP tools are not appearing in the session:
 
-1. Check `~/.cursor/mcp.json` for a Box server entry. If it contains a `box` server with `CLIENT_ID` and `CLIENT_SECRET` values, the MCP server should be available. Verify by calling `who_am_i`. If it fails, the OAuth flow may not have been completed — call `mcp_auth` to trigger it.
+1. Check your platform MCP config for a Box server entry. If it contains a `box` server with `CLIENT_ID` and `CLIENT_SECRET` values, the MCP server should be available. Verify by calling `who_am_i`. If it fails, the OAuth flow may not have been completed — call `mcp_auth` to trigger it.
 2. If no Box server entry exists, guide the user through `references/auth-and-setup.md` to create or retrieve OAuth credentials and add the server:
 
 ```json
@@ -32,14 +32,14 @@ If MCP tools are not appearing in the session:
 If the file already contains other MCP servers, merge the `box` entry into the existing `mcpServers` object — do not overwrite the file. Never write credentials into the conversation or into files inside a repository.
 
 3. Confirm the OAuth app has the correct redirect URI for the platform.
-4. Confirm the platform has third-party plugins enabled (e.g., in Cursor: Settings > Features > "Include third-party Plugins, Skills, and other configs").
+4. Confirm any platform setting required for third-party plugins or MCP integrations is enabled (for Cursor, Settings > Features > "Include third-party Plugins, Skills, and other configs").
 5. Restart the editor only as a last resort — MCP connections are established at startup.
 
-If MCP auth still fails after setup, fall back to the Box CLI while the user resolves the connection. See `references/box-cli.md` for CLI auth and common commands.
+If MCP auth still fails after setup, fall back to the Box CLI while the user resolves the connection. See `references/box-cli.md` for CLI auth and common commands. If CLI is unavailable or the user declines CLI, ask for explicit confirmation before using direct REST fallback and then use `references/rest-calls.md`.
 
 ## When to use MCP vs CLI
 
-Tool selection between MCP and CLI is handled in the main skill workflow — see the tool selection table in `SKILL.md`. In short: MCP provides structured I/O, plugin-managed auth, and concurrent-safe calls; CLI provides full API coverage and compact, field-filtered output. The workflow picks the best available tool per operation.
+Tool selection between MCP and CLI is handled in the main skill workflow — see the tool selection table in `SKILL.md`. In short: MCP provides structured I/O, plugin-managed auth, and concurrent-safe calls; CLI provides full API coverage and compact, field-filtered output. Direct REST is last-resort fallback only, and requires explicit user confirmation.
 
 ## Search
 

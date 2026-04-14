@@ -13,7 +13,7 @@
 
 Read `references/auth-and-setup.md` first when the acting identity or SDK vs REST choice is unclear.
 
-For local or manual verification, prefer `scripts/box_cli_smoke.py` when Box CLI is available and authenticated. Fall back to `scripts/box_rest.py` when the task is token-first or Box CLI is unavailable.
+For local or manual verification, prefer native Box CLI commands when Box CLI is available and authenticated. Use direct REST only as a last resort after MCP/CLI setup attempts and explicit user confirmation.
 
 ## Upload a file
 
@@ -24,6 +24,7 @@ For local or manual verification, prefer `scripts/box_cli_smoke.py` when Box CLI
 - Set the destination folder ID first.
 - Treat file-name conflicts explicitly.
 - Start with standard upload; use chunked upload only when file size or resumable behavior requires it.
+- When building raw multipart REST uploads, sanitize filenames used in `Content-Disposition` headers (escape quotes and backslashes; strip CR/LF) to avoid malformed requests and header-injection edge cases.
 - Minimal smoke check:
   - Upload the file, then list the destination folder with the same actor and confirm returned `id` and `name`.
 

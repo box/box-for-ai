@@ -299,9 +299,3 @@ search_files_metadata: "risk_rating = 'High'"
 6. **[CONFIRM]**: "Create report, route to attorney?"
 7. `upload_file`, `create_file_comment`, `create_collaboration`
 8. Report: "Comparison complete. Report routed to [attorney]."
-
----
-
-## See Also
-- `box:box` — MCP auth, tool selection, base workflows
-- `box-legal-shared` — Risk frameworks, confidentiality, human-in-the-loop, metadata strategy, temporal monitoring

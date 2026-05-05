@@ -1,5 +1,5 @@
 ---
-name: box-legal-contract
+name: box-legal-workflows-contract
 description: Automate contract review and monitoring with Box MCP — identify new contracts added since last review period using metadata or keyword search, compare contracts against standard firm templates to flag material variances (indemnification, liability caps, termination rights, governing law, IP ownership), extract and write structured metadata (parties, dates, contract value, key clauses, risk ratings, expiration dates) to Box for searchability, create variance analysis reports with citations, proactively monitor for expiring contracts to trigger renegotiation reminders with calculated notice deadlines, and batch process multiple contracts with rate-limit-aware pacing. Use this skill when the user mentions contract review, contract monitoring, NDA review, MSA comparison, contract expiration, contract metadata, variance analysis, or needs recurring contract analysis workflows.
 ---
 
@@ -7,7 +7,7 @@ description: Automate contract review and monitoring with Box MCP — identify n
 
 > **PREREQUISITES:**
 > - Read `box:box` for Box MCP auth, tool selection, base workflows. If missing, run: `npx skills add https://github.com/box/box-for-ai --skill box`
-> - Read `box-legal-shared` for risk frameworks, confidentiality, human-in-the-loop requirements, Box AI governance, metadata strategy. If missing, ensure it's installed from the same skill package.
+> - Read `box-legal-workflows` for risk frameworks, confidentiality, human-in-the-loop requirements, Box AI governance, metadata strategy. If missing, ensure it's installed from the same skill package.
 
 Legal contract management involves regular review of executed agreements to ensure compliance, track dates (renewals, expirations), identify risks, and maintain structured metadata. This skill automates recurring reviews, variance analysis, metadata extraction, and proactive expiration monitoring.
 
@@ -45,7 +45,7 @@ Legal contract management involves regular review of executed agreements to ensu
 
 ### Risk Rating
 
-**See box-legal-shared for:** General risk framework.
+**See box-legal-workflows for:** General risk framework.
 
 **Contract-specific:**
 
@@ -188,7 +188,7 @@ search_files_metadata: "risk_rating = 'High'"
 
 ## Guardrails
 
-**See box-legal-shared for:** Human-in-the-loop requirements, confidentiality, Box AI governance.
+**See box-legal-workflows for:** Human-in-the-loop requirements, confidentiality, Box AI governance.
 
 **Contract-specific:**
 

@@ -225,9 +225,3 @@ Legal client intake determines if the firm can and should take on a prospective 
 7. **[CONFIRM]**: "Share with Jane? Collaboration or link?"
 8. `create_collaboration`, `set_file_metadata`
 9. Report: "Approved. Letter generated and shared."
-
----
-
-## See Also
-- `box:box` — MCP auth, tool selection, base workflows
-- `box-legal-shared` — Risk frameworks, confidentiality, human-in-the-loop, decision transparency

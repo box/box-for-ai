@@ -9,7 +9,11 @@ The skills in this repo follow the [Agent Skills](https://agentskills.io/) forma
 ### As an Agent Skill
 
 ```bash
+# Choose skills interactively
 npx skills add box/skills
+
+# Or install the Box CLI skill independently
+npx skills add box/skills --skill box-cli
 ```
 
 Check out the latest and full list of skills [here](https://skills.sh/box/skills).
@@ -34,6 +38,17 @@ In Kiro, open the Powers panel and install the Box Power. If it is not shown in 
 Note that the Box MCP Server currently does not support Dynamic Client Registration, so credential-free Power authentication is not yet available in Kiro IDE. Kiro CLI users can configure Box OAuth client credentials in their user MCP settings; future managed OAuth integration or confidential-client OAuth support in the IDE can enable the bundled MCP connection there.
 
 Try it with: `Use the Box Power to add Box file upload to this app.`
+
+## Available Skills
+
+| Skill | Purpose |
+|---|---|
+| `box` | General Box foundation and router |
+| `box-cli` | Reliable Box CLI operations, automation, bulk work, and recovery |
+| `box-legal-workflows` | Shared legal workflow guidance |
+| `box-legal-workflows-intake` | Legal intake and onboarding |
+| `box-legal-workflows-contract` | Contract review and monitoring |
+| `box-legal-workflows-ma` | M&A virtual data rooms |
 
 ## Usage
 
@@ -63,10 +78,13 @@ Skills are automatically available once installed. The agent will use them when 
 
 ## Skill Structure
 
-The Box skill follows the [Agent Skills Open Standard](https://agentskills.io/):
+The skills follow the [Agent Skills Open Standard](https://agentskills.io/). Each skill owns its instructions and can be installed independently.
 
-- `SKILL.md` - Skill manifest with frontmatter, routing table, workflow steps, and guardrails
-- `references/` - Individual reference files (auth, content workflows, MCP tool patterns, AI/retrieval, etc.)
+- `SKILL.md` - Required manifest and task guidance
+- `references/` - Optional skill-local detail for substantial conditional workflows
+- `scripts/` or `assets/` - Optional executable helpers or output templates
+
+`box-cli` intentionally starts as a single `SKILL.md`. It uses installed CLI help and current public Box documentation for changing command details rather than vendoring a command catalog.
 
 ## Prerequisites
 
@@ -89,7 +107,7 @@ curl -sS -H "Authorization: Bearer $BOX_ACCESS_TOKEN" -H "Accept: application/js
 
 ## Contributing
 
-Skills follow the [Agent Skills specification](https://agentskills.io). The Box skill is a directory with a `SKILL.md` file containing YAML frontmatter and markdown instructions, plus a `references/` directory for feature-specific deep dives.
+Skills follow the [Agent Skills specification](https://agentskills.io). Each skill is a directory with a `SKILL.md` file containing YAML frontmatter and markdown instructions, plus only the supporting resources its workflow requires.
 
 ## License
 

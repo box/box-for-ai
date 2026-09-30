@@ -10,6 +10,9 @@ The skills in this repo follow the [Agent Skills](https://agentskills.io/) forma
 
 ```bash
 npx skills add box/skills
+
+# Install the SDK development skill independently
+npx skills add box/skills --skill box-sdk-development
 ```
 
 Check out the latest and full list of skills [here](https://skills.sh/box/skills).
@@ -38,6 +41,8 @@ Try it with: `Use the Box Power to add Box file upload to this app.`
 ## Usage
 
 Skills are automatically available once installed. The agent will use them when relevant tasks are detected. Here are some example prompts:
+
+The `box-sdk-development` skill guides TypeScript/Node and Python integrations, including method-signature verification, bulk file jobs, rate-limit handling, logging, and a short design rationale after each completed SDK task.
 
 ### Implement Box content workflows
 

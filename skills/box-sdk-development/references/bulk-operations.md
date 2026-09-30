@@ -1,0 +1,13 @@
+# Bulk SDK jobs
+
+Use this for hundreds to tens of thousands of files. The goal is predictable throughput, visible pressure, and safe restart, not a promise that every operation has a bulk endpoint.
+
+1. **Inventory:** enumerate all source pages with the endpoint's supported pagination; record stable Box IDs, versions/ETags where needed, size, intended action, and actor. Prefer marker pagination for changing or very large collections when supported. Do not use search as a complete inventory without checking its result limits and consistency.
+2. **Plan:** use a server-side Box operation when it fulfills the task. Check whether a real batch endpoint, ZIP download, metadata query, or event-driven delta reduces calls. For per-item operations, estimate requests per item and initial safe concurrency from the endpoint's documented limits; make both configurable and measure actual throughput.
+3. **Execute:** use a bounded queue and shared rate limiter, not an unbounded loop or burst. Process independent items concurrently only within the limiter. Respect `Retry-After` globally for the affected actor/app. Apply capped backoff with jitter and an attempt/time budget. Separate failures that need permission or data fixes from transient failures.
+4. **Checkpoint:** store per-item states (`pending`, `in_progress`, `succeeded`, `failed`), attempt count, Box ID/version, destination, and error/request ID in a durable ledger. On restart, reconcile uncertain `in_progress` writes before retrying. Save discovery checkpoints, but avoid treating long-lived markers as permanent inventory.
+5. **Observe and reconcile:** record successes and failures, progress counts, calls/minute, 429 rate, cumulative retry delay, bytes/sec, and remaining estimate. Alert or surface an operator warning as soon as throttling appears. Compare completed items with the manifest and Box state; report missing, failed, and skipped IDs separately.
+
+For a 25,000-file download, calculate the API budget before coding. Individual download may require roughly one content request per file plus discovery, retries, and verification; ZIP may reduce request count if archives fit and per-file isolation is unnecessary. Partition ZIP jobs by both count and bytes. A one-by-one sequential script may be too slow, while unbounded concurrency may trigger 429s; use measured, bounded concurrency with backpressure.
+
+Box documents general, upload, and search limits separately; endpoints and enterprise conditions may impose other throttles. Treat published limits as planning inputs, not a guarantee of available capacity. [Box rate limits](https://developer.box.com/guides/api-calls/permissions-and-errors/rate-limits/).

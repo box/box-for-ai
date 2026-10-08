@@ -5,9 +5,11 @@ description: Build, debug, or review repeatable Box API integrations and agent w
 
 # Box integration best practices
 
-For bulk work or 429s, estimate calls per completed item and peak request rate by Box actor and endpoint. Check the current [rate limits](https://developer.box.com/guides/api-calls/permissions-and-errors/rate-limits); user, endpoint, enterprise, and temporary quality-of-service limits may apply.
+For bulk work or 429 errors, estimate calls per completed item and peak request rate by Box actor and endpoint. Budget uploads against their separate limit. Check the current [rate limits](https://developer.box.com/guides/api-calls/permissions-and-errors/rate-limits); user, endpoint, enterprise, and temporary quality-of-service limits may apply.
 
 ## Reduce calls
+
+For reviews, trace Box requests through loops and retry paths before changing concurrency or seeking more capacity.
 
 - Reuse cached access tokens. Request fields needed for a decision in the list response when supported, and reuse returned data instead of fetching each item again. `fields` reduces call count only when it replaces a follow-up read.
 - Use the largest useful supported page size. For large or changing collections, use [marker pagination](https://developer.box.com/guides/api-calls/pagination/marker-based) where supported; follow `next_marker` to completion and do not treat a marker as a durable checkpoint.
@@ -18,7 +20,9 @@ For bulk work or 429s, estimate calls per completed item and peak request rate b
 
 - Bound concurrency across workers sharing a Box actor, accounting for endpoint and enterprise limits. On 429, honor `Retry-After` across affected workers. Current official SDKs retry 429s; check the installed version before adding another retry layer. For direct HTTP, use bounded backoff with jitter.
 - For long-running jobs, persist per-item outcomes so work can resume. Reconcile uncertain writes before retrying them.
+- Pause bulk jobs on repeated 401 or 403 responses; fix the actor or access before sending remaining items.
+- If necessary traffic still exceeds available capacity after removing avoidable calls, surface the capacity need. Do not rotate identities to evade limits.
 
 ## Check the result
 
-Compare calls per completed item and 429s by actor and endpoint on a representative workload. Use the [Platform Activity report](https://docs.box.com/en/box-admin-tools/reporting-and-insights/platform-activity-report) when enterprise-level attribution is needed. If a token reaches a browser or other client-side component, [downscope it](https://developer.box.com/guides/authentication/tokens/downscope).
+Compare calls per completed item, 429s by actor and endpoint, and completed-job throughput on a representative workload. Use the [Platform Activity report](https://docs.box.com/en/box-admin-tools/reporting-and-insights/platform-activity-report) when enterprise-level attribution is needed. If a token reaches a browser or other client-side component, [downscope it](https://developer.box.com/guides/authentication/tokens/downscope).

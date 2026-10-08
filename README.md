@@ -10,9 +10,6 @@ The skills in this repo follow the [Agent Skills](https://agentskills.io/) forma
 
 ```bash
 npx skills add box/skills
-
-# Install the integration best practices skill independently
-npx skills add box/skills --skill box-integration-best-practices
 ```
 
 Check out the latest and full list of skills [here](https://skills.sh/box/skills).
@@ -41,8 +38,6 @@ Try it with: `Use the Box Power to add Box file upload to this app.`
 ## Usage
 
 Skills are automatically available once installed. The agent will use them when relevant tasks are detected. Here are some example prompts:
-
-The `box-integration-best-practices` skill guides the design and review of efficient Box integrations, apps, and repeatable agent workflows across SDKs and direct API calls.
 
 ### Implement Box content workflows
 
